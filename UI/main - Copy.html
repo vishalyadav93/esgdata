@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+html, body {
+  height: 100%; /* Ensures the document takes full height */
+}
+
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      overflow: hidden;
+      background-color: #e2efda;
+    }
+
+    nav {
+      width: 200px;
+      background-color: #2a5934;
+      color: white;
+      position: fixed;
+      height: 100%;
+      overflow: hidden;
+      transition: width 0.5s ease, opacity 0.5s ease;
+      box-shadow: 3px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    nav.collapsed {
+      width: 0;
+      opacity: 0.5;
+    }
+
+    nav h2 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      display: block;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #194d2b;
+      transform: translateX(10px);
+    }
+
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #194d2b;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .content {
+      margin-left: 200px;
+      padding: 20px;
+      flex: 1;
+      transition: margin-left 0.5s ease, background-color 0.5s ease;
+    }
+
+    .content.collapsed {
+      margin-left: 0;
+    }
+	
+	 .innerFameContent{
+	 height: 97%; 
+    }
+
+    header {
+      background-color: #2a5934;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      background-color: #2a5934;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: auto;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-btn" onclick="toggleMenu()">☰</button>
+  <nav id="sidebar">
+    <h2> &nbsp;&nbsp;</h2>
+    <a href="#" onclick="showSection('section1')">What is ESG</a>
+    <a href="#" onclick="showSection('section2')">ESG Data</a>
+    <a href="#" onclick="showSection('section3')">Compliance and Standards</a>
+    <a href="#" onclick="showSection('section4')">Tools and Calculators</a>
+	<a href="#" onclick="showSection('section5')">Data Templates</a>
+	<a href="#" onclick="showSection('section6')">Investment Insights</a>
+	<a href="#" onclick="showSection('section7')">About Us</a>
+
+  </nav>
+
+  <div class="content" id="mainContent">
+  <div class="innerFameContent" id="innerFrame">
+    <header>
+      <h1>Welcome to the ESG data</h1>
+    </header>
+    <section id="section1" class="section active">
+      <h2>What is ESG</h2>
+	   <div id="ESG">
+	   
+ESG stands for Environmental, Social, and Governance, which are three key factors used to evaluate the sustainability and ethical impact of an investment or a business. ESG has become a critical framework for investors, companies, and stakeholders who want to consider more than just financial returns when making decisions
+	   </div>
+    </section>
+	    <section id="section2" class="section">
+      <h2>ESG Data</h2>
+      <p>This is the content for section 2. The design is clean and elegant.</p>
+    </section>
+
+    <section id="section3" class="section">
+      <h2>Compliance and Standards</h2>
+      <p>This is the content for section 2. The design is clean and elegant.</p>
+    </section>
+    <section id="section4" class="section">
+      <h2>Tools and Calculators</h2>
+      <p>This is the content for section 3. Feel free to explore!</p>
+    </section>
+    <section id="section5" class="section">
+      <h2>Data Templates</h2>
+      <p>This is the content for section 4. Everything is responsive and modern!</p>
+    </section>
+	    <section id="section6" class="section">
+      <h2>Investment Insights</h2>
+      <p>This is the content for section 4. Everything is responsive and modern!</p>
+    </section>
+	    <section id="section7" class="section">
+      <h2>About Us</h2>
+      <p>Reach us at <a href="mailto:esgdata.in@gmail.com">esgdata.in@gmail.com</a></p>
+    </section>
+	
+	</div>
+    <footer>
+      <p>Copyright | esgdata.in © 2024</p>
+    </footer>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('mainContent');
+      sidebar.classList.toggle('collapsed');
+      content.classList.toggle('collapsed');
+    }
+
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      // Show the selected section
+      document.getElementById(sectionId).classList.add('active');
+    }
+  </script>
+</body>
+</html>

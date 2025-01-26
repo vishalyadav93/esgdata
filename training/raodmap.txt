@@ -1,0 +1,29 @@
+ESG basics
+
+iso esg standards
+
+List all materiality of GRI,SASB,TCFD,IR in a table
+create mapping between these materials
+Create Materiality Matrix)
+Create a sample frame work for a Software industry and Aircraft industry
+Analyse ESG reports of Aviation / an sotware industry
+
+Environment:
+	List UN SDGs in a table
+	create deep multiple tables for Energy/Water/Waste
+	study all carbon related 
+		Carbon Footprint Assessment
+		Calculating GHG Emissions:
+		Scope 1, 2, and 3 Emissions Analysis: 
+		
+		Carbon Accounting
+		GHG Reporting and Disclosure
+		Carbon Offset Projects
+		GHG Emission Reduction Strategies
+		Employee Training and Engagement
+
+	Resource Management
+	waste management, and sustainable sourcing
+
+
+ESG Investment and Finance

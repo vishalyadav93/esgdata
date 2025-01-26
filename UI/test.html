@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three Horizontal Sections</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex; /* Makes sections align horizontally */
+      height: 100vh; /* Full viewport height */
+    }
+
+    section {
+      flex: 1; /* Equal width for each section */
+      display: flex;
+      align-items: center; /* Center content vertically */
+      justify-content: center; /* Center content horizontally */
+      color: white;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .section1 {
+      background-color: #3498db; /* Blue */
+    }
+
+    .section2 {
+      background-color: #2ecc71; /* Green */
+    }
+
+    .section3 {
+      background-color: #e74c3c; /* Red */
+    }
+  </style>
+</head>
+<body>
+  <section class="section1">
+    Section 1
+  </section>
+  <section class="section2">
+    Section 2
+  </section>
+  <section class="section3">
+    Section 3
+  </section>
+</body>
+</html>
