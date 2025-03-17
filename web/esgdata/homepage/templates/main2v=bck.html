@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG Data Platform</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+{% load static %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<script src="{% static 'js/main.js' %}"></script>
+</head>
+<body class="bg-light">
+    <!-- Sidebar Toggle Button -->
+    <button class="toggle-btn" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="shadow-lg">
+        <div class="sidebar-header">
+            <img src="https://cdn.svgapi.com/vector/45623/esg-logo.svg" alt="ESG Logo" class="logo">
+        </div>
+        <div class="nav-links">
+            <a href="#" onclick="showSection('section1')" class="nav-link">
+                <i class="fas fa-info-circle"></i> What is ESG
+            </a>
+            <a href="#" onclick="showSection('section2')" class="nav-link">
+                <i class="fas fa-database"></i> ESG Data
+            </a>
+            <a href="#" onclick="showSection('section3')" class="nav-link">
+                <i class="fas fa-check-circle"></i> Compliance
+            </a>
+            <a href="#" onclick="showSection('section4')" class="nav-link">
+                <i class="fas fa-calculator"></i> Tools
+            </a>
+            <a href="#" onclick="showSection('section5')" class="nav-link">
+                <i class="fas fa-file-alt"></i> Templates
+            </a>
+            <a href="#" onclick="showSection('section6')" class="nav-link">
+                <i class="fas fa-chart-line"></i> Insights
+            </a>
+            <a href="#" onclick="showSection('section7')" class="nav-link">
+                <i class="fas fa-robot"></i> AI Models
+            </a>
+            <a href="#" onclick="showSection('section8')" class="nav-link">
+                <i class="fas fa-users"></i> About Us
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content" id="mainContent">
+        <div class="inner-content" id="innerFrame">
+            <!-- Header -->
+            <header class="main-header text-center py-5">
+                <h1 class="display-4">Welcome to ESG Data</h1>
+                <p class="lead">Don't Paint, Plant Green</p>
+            </header>
+
+            <!-- ESG Overview Section -->
+            <section id="section1" class="section active">
+                <div class="container">
+                    <h2 class="section-title">What is ESG?</h2>
+                    <p class="section-description">
+                        ESG stands for Environmental, Social, and Governance - three key factors used to evaluate the sustainability and ethical impact of investments and businesses.
+                    </p>
+
+                    <div class="esg-pillars row g-4">
+                        <div class="col-md-4">
+                            <div class="pillar environmental">
+                                <i class="fas fa-leaf pillar-icon"></i>
+                                <h3>Environmental</h3>
+                                <ul class="pillar-list">
+                                    {% for row in environment_data %}
+                                        <li>{{ row.descr }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="pillar social">
+                                <i class="fas fa-users pillar-icon"></i>
+                                <h3>Social</h3>
+                                <ul class="pillar-list">
+                                    {% for row in social_data %}
+                                        <li>{{ row.descr }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="pillar governance">
+                                <i class="fas fa-balance-scale pillar-icon"></i>
+                                <h3>Governance</h3>
+                                <ul class="pillar-list">
+                                    {% for row in governance_data %}
+                                        <li>{{ row.descr }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ESG Data Section -->
+            <section id="section2" class="section">
+                <div class="container">
+                    <h2 class="section-title">ESG Data</h2>
+                    <p>This is the content for section 2. The design is clean and elegant.</p>
+                </div>
+            </section>
+
+            <!-- Compliance Section -->
+            <section id="section3" class="section">
+                <div class="container">
+                    <h2 class="section-title">Compliance and Standards</h2>
+                    <div class="filters mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select id="iso-standard-select" class="form-select">
+                                    <option value="">ISO Standard</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="release-date-select" class="form-select">
+                                    <option value="">Release Date</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="sector-select" class="form-select">
+                                    <option value="">Sector</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="esg-component-select" class="form-select">
+                                    <option value="">ESG Component</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="standards-table" class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ISO Standard</th>
+                                    <th>Release Date</th>
+                                    <th>Sector</th>
+                                    <th>ESG Component</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools and Calculators Section -->
+            <section id="section4" class="section">
+                <div class="container">
+                    <h2 class="section-title">Tools and Calculators</h2>
+                    <p>This is the content for section 3. Feel free to explore!</p>
+                </div>
+            </section>
+
+            <!-- Templates Section -->
+            <section id="section5" class="section">
+                <div class="container">
+                    <h2 class="section-title">Data Templates</h2>
+                    <div id="imageGrid" class="row g-4">
+                        {% for template in templates %}
+                            <div class="col-md-6 image-item">
+                                <div class="template-card">
+                                    <div class="template-image">
+                                        <img src="{{ template.image_path }}" 
+                                             alt="Template Preview"
+                                             onclick="openModal('{{ template.image_path }}')"
+                                             class="img-fluid">
+                                    </div>
+                                    <div class="template-actions">
+                                        <a href="{{ template.excel_path }}" 
+                                           download 
+                                           class="btn btn-primary">
+                                            <i class="fas fa-download"></i>
+                                            {{ template.excel_path | basename }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-controls">
+                        <button id="prevBtn" onclick="changePage(-1)" class="btn btn-outline-primary">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <button id="nextBtn" onclick="changePage(1)" class="btn btn-outline-primary">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Investment Insights Section -->
+            <section id="section6" class="section">
+                <div class="container">
+                    <h2 class="section-title">Investment Insights</h2>
+                    <p>This is the content for section 4. Everything is responsive and modern!</p>
+                </div>
+            </section>
+
+            <!-- AI Models Section -->
+            <section id="section7" class="section">
+                <div class="container">
+                    <h2 class="section-title">AI Models</h2>
+                    <p>This is the content for section 4. Everything is responsive and modern!</p>
+                </div>
+            </section>
+
+            <!-- About Us Section -->
+            <section id="section8" class="section">
+                <div class="container">
+                    <h2 class="section-title">About Us</h2>
+                    <p>Contact us at <a href="mailto:esgdata.in@gmail.com">esgdata.in@gmail.com</a></p>
+                </div>
+            </section>
+
+            <!-- Image Modal -->
+            <div id="imageModal" class="modal fade">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" onclick="closeModal()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="modalImage" src="" alt="Template Preview" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container">
+                    <p class="text-center mb-0">Copyright | esgdata.in © 2024</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
