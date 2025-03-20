@@ -70,6 +70,55 @@ function closeModal() {
     bootstrap.Modal.getInstance(modal).hide();
 }
 
+
+ document.addEventListener("DOMContentLoaded", function () {
+        // Fetch scope and category dropdown values
+        fetch('/api/get-scopes-categories/')
+            .then(response => response.json())
+            .then(data => {
+                let scopeDropdown = document.getElementById("scope-dropdown");
+                let categoryDropdown = document.getElementById("category-dropdown");
+
+                data.scopes.forEach(scope => {
+                    let option = new Option(scope, scope);
+                    scopeDropdown.add(option);
+                });
+
+                data.categories.forEach(category => {
+                    let option = new Option(category, category);
+                    categoryDropdown.add(option);
+                });
+            });
+
+        // Handle form submission
+        document.getElementById("filter-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            let scope = document.getElementById("scope-dropdown").value;
+            let category = document.getElementById("category-dropdown").value;
+
+            let queryString = `?scope=${encodeURIComponent(scope)}&category=${encodeURIComponent(category)}`;
+            fetch('/api/filter-attributes/' + queryString)
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.querySelector("#attributes-table tbody");
+                    tableBody.innerHTML = ""; // Clear table
+
+                    data.attributes.forEach(attr => {
+                        let row = tableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${attr.attribute_name}</td>
+                            <td>${attr.measuring_unit}</td>
+                            <td>${attr.GWP_factor}</td>
+                            <td>${attr.scope}</td>
+                            <td>${attr.category}</td>
+                            <td><input type="number" name="value_${attr.attribute_name}" /></td>
+                        `;
+                    });
+                });
+        });
+    });
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize pagination

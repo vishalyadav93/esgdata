@@ -5,7 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Entity
 import os
 from django.http import JsonResponse
-from .models import ESGStandard
+from .models import ESGStandard,Attributes
+
 
 
 @csrf_exempt
@@ -21,6 +22,39 @@ def home(request):
        'templates': show_templates()
     }
         )
+
+
+def filter_attributes(request):
+    scope_filter = request.GET.get('scope', '')
+    category_filter = request.GET.get('category', '')
+
+    attributes = Attributes.objects.all()
+    if scope_filter:
+        attributes = attributes.filter(scope=scope_filter)
+    if category_filter:
+        attributes = attributes.filter(category=category_filter)
+
+    # Convert queryset to a list of dictionaries
+    attributes_data = [
+        {
+            "attribute_name": attr.attribute_name,
+            "measuring_unit": attr.measuring_unit,
+            "GWP_factor": attr.GWP_factor,
+            "scope": attr.scope,
+            "category": attr.category,
+        }
+        for attr in attributes
+    ]
+
+    return JsonResponse({'attributes': attributes_data})
+
+
+def get_scopes_categories(request):
+    scopes = list(Attributes.objects.values_list('scope', flat=True).distinct())
+    categories = list(Attributes.objects.values_list('category', flat=True).distinct())
+
+    return JsonResponse({'scopes': scopes, 'categories': categories})
+
 
 
 def show_templates():
