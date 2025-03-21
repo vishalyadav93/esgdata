@@ -23,7 +23,7 @@
     <!-- Sidebar Navigation -->
     <nav id="sidebar" class="shadow-lg">
         <div class="sidebar-header">
-<img src="{% static 'images/logo.png' %}" alt="ESG Logo" class="logo">
+<img src="{% static 'images/page_images/logo.png' %}" alt="ESG Logo" class="logo">
         </div>
         <div class="nav-links">
             <a href="#" onclick="showSection('section1')" class="nav-link">
@@ -163,41 +163,81 @@
             </section>
 
             <!-- Tools and Calculators Section -->
-            <section id="section4" class="section">
-                <div class="container">
-                    <h2 class="section-title">Tools and Calculators</h2>
+<section id="section4" class="section py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center text-success fw-bold mb-4">
+            <i class="bi bi-calculator"></i>🌿 Tools and Calculators
+        </h2>
+</div>
+<div class="text-center mb-4">
+    <button class="btn tool-btn" data-tool="Carbon-calculator">🌱 Carbon Calculator</button>
+    <button class="btn tool-btn" data-tool="materiality-assessment">📊 Materiality Assessment</button>
+    <button class="btn tool-btn" data-tool="other-esg-tools">🛠 Other ESG Tools</button>
+</div>
 
+<!-- Carbon Calculator Section -->
+<div id="Carbon-calculator">
+    <form id="filter-form" class="row g-3 align-items-end mb-4 p-4 shadow rounded bg-white">
+        <div class="col-md-4">
+            <label for="scope-dropdown" class="form-label fw-bold text-success">Scope:</label>
+            <select name="scope" id="scope-dropdown" class="form-select border-success">
+                <option value="">Select Scope</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="category-dropdown" class="form-label fw-bold text-success">Category:</label>
+            <select name="category" id="category-dropdown" class="form-select border-success">
+                <option value="">Select Category</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-grid">
+            <button type="submit" class="btn btn-success shadow-sm">
+                <i class="bi bi-funnel"></i> Apply Filter
+            </button>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table id="attributes-table" class="table table-bordered table-striped shadow-sm">
+            <thead class="table-success">
+                <tr>
+                    <th>Attribute Name</th>
+                    <th>Measuring Unit</th>
+                    <th>GWP Factor</th>
+                    <th>Scope</th>
+                    <th>Category</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 
-							<form id="filter-form">
-								<label>Scope:</label>
-								<select name="scope" id="scope-dropdown">
-									<option value="">-- Select Scope --</option>
-								</select>
+<!-- Materiality Assessment Section -->
+<div id="materiality-assessment" style="display: none;">
+    <h3 class="text-center text-success fw-bold">📊 Materiality Assessment</h3>
+    <p class="text-center text-muted">Assess material ESG factors and prioritize them.</p>
+    
+    <div class="text-center">
+        <button id="startAssessment" class="btn btn-success shadow-sm">Start Assessment</button>
+    </div>
 
-								<label>Category:</label>
-								<select name="category" id="category-dropdown">
-									<option value="">-- Select Category --</option>
-								</select>
+    <div id="indicatorContainer" class="d-flex flex-wrap gap-3 mt-3"></div>
+</div>
 
-								<button type="submit">Filter</button>
-							</form>
+<!-- Other ESG Tools Section -->
+<div id="other-esg-tools" style="display: none;">
+    <h3 class="text-center text-success fw-bold">🛠 Other ESG Tools</h3>
+    <p class="text-center text-muted">Explore various ESG-related tools.</p>
+    <ul class="list-group shadow">
+        <li class="list-group-item">📌 ESG Benchmarking</li>
+        <li class="list-group-item">🔍 Compliance Checker</li>
+        <li class="list-group-item">📊 Risk Assessment</li>
+    </ul>
+</div>
+	
+</section>
 
-							<table id="attributes-table" border="1">
-								<thead>
-									<tr>
-										<th>Attribute Name</th>
-										<th>Measuring Unit</th>
-										<th>GWP Factor</th>
-										<th>Scope</th>
-										<th>Category</th>
-										<th>Value</th>
-									</tr>
-								</thead>
-								<tbody></tbody>
-							</table>
-
-                </div>
-            </section>
 
             <!-- Templates Section -->
             <section id="section5" class="section">
@@ -279,7 +319,7 @@
             <!-- Footer -->
             <footer class="footer">
                 <div class="container">
-                    <p class="text-center mb-0">Copyright | esgdata.in © 2024</p>
+                    <p class="text-center mb-0">Copyright | esgdata.in © 2025</p>
                 </div>
             </footer>
         </div>

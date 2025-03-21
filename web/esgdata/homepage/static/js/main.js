@@ -212,3 +212,77 @@ document.addEventListener('DOMContentLoaded', function() {
         select.addEventListener('change', updateTable);
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const toolButtons = document.querySelectorAll(".tool-btn");
+
+    toolButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const selectedTool = this.getAttribute("data-tool");
+
+            // Hide all sections
+            document.getElementById("Carbon-calculator").style.display = "none";
+            document.getElementById("materiality-assessment").style.display = "none";
+            document.getElementById("other-esg-tools").style.display = "none";
+
+            // Show the selected section
+            document.getElementById(selectedTool).style.display = "block";
+
+            // Reset button styles
+            toolButtons.forEach(btn => btn.classList.remove("active"));
+
+            // Highlight the clicked button
+            this.classList.add("active");
+        });
+    });
+
+    // Set the default active button (Carbon Calculator)
+    document.querySelector("[data-tool='Carbon-calculator']").classList.add("active");
+});
+
+
+ocument.getElementById("startAssessment").addEventListener("click", function() {
+    fetch("/get-materiality-data/")
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById("indicatorContainer");
+            container.innerHTML = ""; // Clear previous content
+
+            Object.entries(data.data).forEach(([indicator, attributes]) => {
+                let indicatorDiv = document.createElement("div");
+                indicatorDiv.classList.add("indicator-block", "p-3", "rounded", "border", "shadow-sm");
+                indicatorDiv.innerHTML = `<strong>${indicator}</strong>`;
+
+                let attributeContainer = document.createElement("div");
+                attributeContainer.classList.add("d-flex", "flex-wrap", "gap-2", "mt-2");
+
+                attributes.forEach(attr => {
+                    let attrDiv = document.createElement("div");
+                    attrDiv.classList.add("attribute-block", "p-2", "border", "rounded", "bg-light", "selectable");
+                    attrDiv.textContent = attr;
+
+                    // Toggle selection
+                    attrDiv.addEventListener("click", function() {
+                        this.classList.toggle("selected");
+                    });
+
+                    attributeContainer.appendChild(attrDiv);
+                });
+
+                indicatorDiv.appendChild(attributeContainer);
+                container.appendChild(indicatorDiv);
+            });
+        })
+        .catch(error => console.error("Error fetching materiality data:", error));
+});
+
+// Styling for selection
+document.addEventListener("DOMContentLoaded", function() {
+    let style = document.createElement("style");
+    style.innerHTML = `
+        .indicator-block { background: #f8f9fa; cursor: pointer; }
+        .attribute-block { cursor: pointer; }
+        .attribute-block.selected { background: #28a745; color: white; }
+    `;
+    document.head.appendChild(style);
+});

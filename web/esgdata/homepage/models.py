@@ -21,13 +21,16 @@ class ESGStandard(models.Model):
         return f"{self.iso_standard} - {self.release_date} - {self.sector} - {self.esg_component}"
 
 class Attributes(models.Model):
-    attribute_name = models.CharField(max_length=1000)
+    attribute_name = models.CharField(primary_key=True,max_length=900)
     measuring_unit = models.CharField(max_length=50)
     GWP_factor = models.IntegerField()
     scope = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
     
     class Meta:
-        db_table = '[esg].[attributes]' 
+        db_table = '[esg].[indicator_attributes]' 
     def __str__(self):
         return f"{self.attribute_name} - {self.measuring_unit} - {self.GWP_factor} - {self.scope} - {self.category}"
+
+
+

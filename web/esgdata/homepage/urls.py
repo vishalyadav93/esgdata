@@ -7,5 +7,7 @@ urlpatterns = [
     path('api/filter_standards/', views.filter_standards, name='filter_standards'),
     path('api/filter-attributes/', views.filter_attributes, name='filter_attributes'),
     path('api/get-scopes-categories/', views.get_scopes_categories, name='get_scopes_categories'),
+    path("get-materiality-data/", views.get_materiality_assessment_data, name="get_materiality_data"),
+
 
 ]

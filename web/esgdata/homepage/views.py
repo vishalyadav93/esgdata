@@ -8,7 +8,6 @@ from django.http import JsonResponse
 from .models import ESGStandard,Attributes
 
 
-
 @csrf_exempt
 def home(request):
     environment_data = Entity.objects.filter(name='Environment')
@@ -132,3 +131,21 @@ def filter_standards(request):
     ]
 
     return JsonResponse(data, safe=False)
+
+
+
+def get_materiality_assessment_data(request):
+    indicators = Attributes.objects.values("linked_indicator_name", "attribute_name")
+    # Group attributes under each indicator
+    grouped_data = {}
+    for item in indicators:
+        indicator = item["linked_indicator_name"]
+        attribute = item["attribute_name"]
+        
+        if indicator not in grouped_data:
+            grouped_data[indicator] = []
+        
+        grouped_data[indicator].append(attribute)
+    
+    return JsonResponse({"data": grouped_data})
+
