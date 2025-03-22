@@ -1,0 +1,29 @@
+USE [ESG]
+GO
+
+/****** Object:  Table [esg].[users]    Script Date: 3/22/2025 7:31:40 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [esg].[users](
+	[user_id] [int] IDENTITY(1,1) NOT NULL,
+	[user_name] [varchar](100) NULL,
+	[user_type] [varchar](100) NULL,
+	[is_active] [bit] NULL,
+	[ts] [datetime2](7) NULL,
+	[email_id] [nvarchar](255) NOT NULL,
+	[contact] [varchar](15) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[user_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[email_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
