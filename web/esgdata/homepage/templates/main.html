@@ -212,7 +212,6 @@
         </table>
     </div>
 </div>
-
 <!-- Materiality Assessment Section -->
 <div id="materiality-assessment" style="display: none;">
     <h3 class="text-center text-success fw-bold">📊 Materiality Assessment</h3>
@@ -220,10 +219,23 @@
     
     <div class="text-center">
         <button id="startAssessment" class="btn btn-success shadow-sm">Start Assessment</button>
+        <button id="createMaterial" class="btn btn-primary shadow-sm">➕ Create Custom Material</button>
     </div>
 
     <div id="indicatorContainer" class="d-flex flex-wrap gap-3 mt-3"></div>
+
+    <!-- Custom Material Form (Initially Hidden) -->
+    <div id="customMaterialForm" class="mt-4 p-3 border rounded shadow-sm" style="display: none;">
+        <h5>Create a Custom Material</h5>
+        <input type="text" id="customIndicator" class="form-control my-2" placeholder="Enter Indicator Name">
+        <input type="text" id="customAttribute" class="form-control my-2" placeholder="Enter Attribute Name">
+		<input type="text" id="measuringUnit" class="form-control my-2" placeholder="Enter measuring unit">
+        <input type="text" id="category" class="form-control my-2" placeholder="Enter category Name">
+
+        <button id="submitCustomMaterial" class="btn btn-primary">Add Material</button>
+    </div>
 </div>
+
 
 <!-- Other ESG Tools Section -->
 <div id="other-esg-tools" style="display: none;">
