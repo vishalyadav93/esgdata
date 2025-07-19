@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Knowledge Tree for Developers</title>
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: The SPA uses a dashboard layout with a fixed sidebar for navigation and a main content area. This structure allows non-linear exploration, which is ideal for a knowledge base. Users can jump to any topic (e.g., "Derivatives," "Algo Trading") instantly. Content is organized into thematic sections using cards, interactive tabs, and accordions to manage information density. This is more usable than a long, linear document, as it allows users to focus on specific areas of interest without excessive scrolling. Key data points are visualized in charts to make comparisons intuitive. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Dummy Security Data. Goal: Compare risk vs. return. Viz: Horizontal Bar Chart (Chart.js). Interaction: Tooltips on hover provide detailed security info. Justification: A bar chart clearly compares the return values, while risk levels are annotated, making it easy to digest.
+        - Report Info: Asset Classes (Equity, Fixed Income, etc.). Goal: Organize and compare. Viz: Tabbed Interface (HTML/JS). Interaction: Clicking tabs reveals the corresponding content. Justification: Tabs prevent overwhelming the user with all tables at once and create a clean, organized layout.
+        - Report Info: Key Ratios. Goal: Inform & Compare. Viz: Horizontal Bar Chart (Chart.js). Interaction: Tooltips provide ratio definitions. Justification: Visually compares the relative "value" or "impact" of different ratios, making abstract concepts more concrete.
+        - Report Info: Quant/Algo Trading topics. Goal: Organize dense text. Viz: Accordion (HTML/JS). Interaction: Clicking to expand/collapse topics. Justification: Manages complexity and allows users to drill down into topics they are interested in without cluttering the initial view.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDF8F0;
+            color: #34495E;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 60vh;
+            }
+        }
+        .sidebar-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .sidebar-link.active, .sidebar-link:hover {
+            background-color: #F3EADE;
+            color: #AF8F6F;
+            transform: translateX(4px);
+        }
+        .tab-button.active {
+            background-color: #74512D;
+            color: #FDF8F0;
+        }
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .accordion-header:hover {
+            background-color: #F3EADE;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.active {
+            max-height: 1000px;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F3EADE;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #AF8F6F;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #74512D;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-[#F3EADE]/50 p-4 fixed h-full overflow-y-auto hidden lg:block">
+            <h1 class="text-2xl font-bold text-[#74512D] mb-6">📘 Finance Tree</h1>
+            <nav id="sidebar-nav" class="flex flex-col space-y-2">
+                <a href="#intro" class="sidebar-link p-2 rounded-lg">I. Introduction</a>
+                <a href="#instruments" class="sidebar-link p-2 rounded-lg">II. Instruments</a>
+                <a href="#assets" class="sidebar-link p-2 rounded-lg">III. Asset Classes</a>
+                <a href="#markets" class="sidebar-link p-2 rounded-lg">IV. Markets</a>
+                <a href="#indexes" class="sidebar-link p-2 rounded-lg">V. Indexes</a>
+                <a href="#portfolios" class="sidebar-link p-2 rounded-lg">VI. Portfolios</a>
+                <a href="#vehicles" class="sidebar-link p-2 rounded-lg">VII. Investment Vehicles</a>
+                <a href="#esg-funds" class="sidebar-link p-2 rounded-lg">VIII. ESG Funds</a>
+                <a href="#concepts" class="sidebar-link p-2 rounded-lg">IX. Key Concepts</a>
+                <a href="#data" class="sidebar-link p-2 rounded-lg">X. Security Data Visualized</a>
+                <a href="#regulatory" class="sidebar-link p-2 rounded-lg">XI. Regulatory Bodies</a>
+                <a href="#quant" class="sidebar-link p-2 rounded-lg">XII. Quant & Algo Trading</a>
+                <a href="#career" class="sidebar-link p-2 rounded-lg">XIII. Career & Skills</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:ml-64 p-4 md:p-8 w-full">
+            <header class="lg:hidden mb-6">
+                 <h1 class="text-3xl font-bold text-[#74512D]">📘 Finance Knowledge Tree</h1>
+                 <p class="text-lg text-[#AF8F6F]">For Software Developers in Investment Banking</p>
+                 <select id="mobile-nav" class="mt-4 w-full p-2 rounded-lg border border-[#AF8F6F] bg-white">
+                    <option value="intro">I. Introduction</option>
+                    <option value="instruments">II. Instruments</option>
+                    <option value="assets">III. Asset Classes</option>
+                    <option value="markets">IV. Markets</option>
+                    <option value="indexes">V. Indexes</option>
+                    <option value="portfolios">VI. Portfolios</option>
+                    <option value="vehicles">VII. Investment Vehicles</option>
+                    <option value="esg-funds">VIII. ESG Funds</option>
+                    <option value="concepts">IX. Key Concepts</option>
+                    <option value="data">X. Security Data Visualized</option>
+                    <option value="regulatory">XI. Regulatory Bodies</option>
+                    <option value="quant">XII. Quant & Algo Trading</option>
+                    <option value="career">XIII. Career & Skills</option>
+                 </select>
+            </header>
+
+            <section id="intro" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">🌳 I. Introduction to Finance: The Language of Capital</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="text-lg leading-relaxed">Finance is the domain concerned with the allocation and management of financial resources over time, encompassing activities like investing, borrowing, lending, budgeting, saving, and forecasting. For a software developer, understanding the principles of finance is crucial for building effective, insightful, and robust systems that drive financial decision-making in an investment bank. Modern finance increasingly relies on sophisticated technology for everything from high-frequency trading to complex risk modeling and regulatory compliance.</p>
+                </div>
+            </section>
+
+            <section id="instruments" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ II. Financial Instruments: The Building Blocks</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">A financial instrument is a legal agreement representing a monetary value, providing a claim to future benefits. Think of them as the fundamental data structures of the financial world, each with unique attributes and behaviors that software systems must accurately model and process.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Debt Instruments</h3>
+                            <p>Represent borrowed money that must be repaid, typically with interest. Key features include the <strong>coupon rate</strong> (interest paid), <strong>maturity date</strong> (when principal is repaid), and <strong>yield</strong> (total return over time). Examples: Bonds, Loans (e.g., a <strong>5-Year SBI bond @ 7%</strong>).</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Equity Instruments</h3>
+                            <p>Represent ownership in an entity. <strong>Common stock</strong> typically carries voting rights and variable dividends, while <strong>preferred stock</strong> offers fixed dividends but usually no voting rights. Market capitalization (share price × shares outstanding) is a key metric. Examples: Stocks/Shares (e.g., <strong>1 share of Infosys</strong>), Preferred Stock.</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Derivatives</h3>
+                            <p>Financial contracts whose value is *derived* from an underlying asset, index, or rate. They are used for hedging (reducing risk) or speculation (taking on risk for profit). Pricing these instruments (e.g., using models like Black-Scholes for options) is computationally intensive. Examples: Options, Futures, Swaps.</p>
+                        </div>
+                         <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Hybrid Instruments</h3>
+                            <p>Combine features of both debt and equity. They offer flexibility but also introduce complexity in valuation and accounting. Example: Convertible Bonds (debt that can be converted into equity under certain conditions).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="assets" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ III. Assets & Asset Classes: Categorizing Wealth</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">An asset is any resource owned with the expectation that it will provide a future economic benefit. In software terms, an asset is data that holds value and can be processed for insights. Assets are grouped into classes based on similar characteristics, which helps in portfolio construction and risk management. Use the tabs below to explore the major asset classes.</p>
+                    <div class="mb-4 flex flex-wrap gap-2">
+                        <button class="tab-button px-4 py-2 rounded-lg bg-[#F3EADE] text-[#74512D] transition active" data-tab="equity">Equity</button>
+                        <button class="tab-button px-4 py-2 rounded-lg bg-[#F3EADE] text-[#74512D] transition" data-tab="fixed-income">Fixed Income</button>
+                        <button class="tab-button px-4 py-2 rounded-lg bg-[#F3EADE] text-[#74512D] transition" data-tab="derivatives">Derivatives</button>
+                        <button class="tab-button px-4 py-2 rounded-lg bg-[#F3EADE] text-[#74512D] transition" data-tab="alternatives">Alternatives</button>
+                        <button class="tab-button px-4 py-2 rounded-lg bg-[#F3EADE] text-[#74512D] transition" data-tab="cash">Cash & Equivalents</button>
+                    </div>
+
+                    <div id="tab-content" class="tab-content-container">
+                        <div id="equity" class="tab-pane active">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ 1. Equity (Ownership-Based): Participating in Growth</h3>
+                            <p class="mb-4">Represents a share of ownership in a company. Software often deals with managing large portfolios of these, from trading systems to valuation models. Companies are often categorized by market capitalization: <strong>large-cap</strong> (over $10 billion), <strong>mid-cap</strong> ($2-10 billion), and <strong>small-cap</strong> (under $2 billion).</p>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white rounded-lg shadow-sm">
+                                    <thead>
+                                        <tr class="bg-[#AF8F6F] text-white">
+                                            <th class="py-2 px-4 text-left rounded-tl-lg">Term</th>
+                                            <th class="py-2 px-4 text-left">Definition</th>
+                                            <th class="py-2 px-4 text-left rounded-tr-lg">Example</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Stock/Share</strong></td>
+                                            <td class="py-2 px-4">Unit of ownership in a company</td>
+                                            <td class="py-2 px-4"><strong>1 share of Infosys</strong></td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Preferred Stock</strong></td>
+                                            <td class="py-2 px-4">Fixed dividend, no voting rights</td>
+                                            <td class="py-2 px-4">Rs. 100/share, 6% dividend</td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>ETF</strong></td>
+                                            <td class="py-2 px-4">Fund that tracks an index or sector</td>
+                                            <td class="py-2 px-4"><strong>Nifty 50 ETF</strong></td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Composite</strong></td>
+                                            <td class="py-2 px-4">Aggregated group of stocks (an index)</td>
+                                            <td class="py-2 px-4">Nasdaq Composite Index</td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Growth Stocks</strong></td>
+                                            <td class="py-2 px-4">High future growth potential, often high P/E</td>
+                                            <td class="py-2 px-4">Zomato, Tesla</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-4"><strong>Value Stocks</strong></td>
+                                            <td class="py-2 px-4">Undervalued vs. fundamentals, often low P/E</td>
+                                            <td class="py-2 px-4">ITC, ONGC</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="fixed-income" class="tab-pane hidden">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ 2. Fixed Income (Debt-Based): Lending for Returns</h3>
+                            <p class="mb-4">Represents a loan made by an investor to a borrower (corporate or government). Crucial for risk management systems, particularly for interest rate and credit risk. Key considerations include <strong>credit ratings</strong> (e.g., AAA, BBB, Junk) which indicate default risk, <strong>duration</strong> (sensitivity to interest rate changes), and <strong>convexity</strong> (measure of how duration changes with interest rates).</p>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white rounded-lg shadow-sm">
+                                    <thead>
+                                        <tr class="bg-[#AF8F6F] text-white">
+                                            <th class="py-2 px-4 text-left rounded-tl-lg">Term</th>
+                                            <th class="py-2 px-4 text-left">Definition</th>
+                                            <th class="py-2 px-4 text-left rounded-tr-lg">Example</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Bond</strong></td>
+                                            <td class="py-2 px-4">Loan from investor to issuer</td>
+                                            <td class="py-2 px-4"><strong>5-Year SBI bond @ 7%</strong></td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Debenture</strong></td>
+                                            <td class="py-2 px-4">Unsecured corporate bond</td>
+                                            <td class="py-2 px-4">Tata Debenture</td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Treasury Bill (T-Bill)</strong></td>
+                                            <td class="py-2 px-4">Short-term government security (<1 year)</td>
+                                            <td class="py-2 px-4"><strong>91-day T-Bill @ Rs. 99.25</strong></td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Inflation-linked Bond</strong></td>
+                                            <td class="py-2 px-4">Returns adjust with inflation</td>
+                                            <td class="py-2 px-4">RBI Inflation Bond</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-4"><strong>Credit Default Swap (CDS)</strong></td>
+                                            <td class="py-2 px-4">Insurance against bond default (a derivative on debt)</td>
+                                            <td class="py-2 px-4">Swap protecting a Rs. 1 crore bond</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="derivatives" class="tab-pane hidden">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ 3. Derivatives (Value from Underlying): Complex Financial Logic</h3>
+                            <p class="mb-4">Contracts whose value is derived from an underlying asset. These require sophisticated pricing and risk management software due to their leverage and complexity. For instance, options pricing models like Black-Scholes require real-time market data and significant computational power. Derivatives are primarily used for <strong>hedging</strong> (offsetting potential losses) or <strong>speculation</strong> (betting on price movements).</p>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white rounded-lg shadow-sm">
+                                    <thead>
+                                        <tr class="bg-[#AF8F6F] text-white">
+                                            <th class="py-2 px-4 text-left rounded-tl-lg">Term</th>
+                                            <th class="py-2 px-4 text-left">Definition</th>
+                                            <th class="py-2 px-4 text-left rounded-tr-lg">Example</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Futures</strong></td>
+                                            <td class="py-2 px-4">Obligation to buy/sell asset at future date, fixed price</td>
+                                            <td class="py-2 px-4"><strong>Nifty Future @ Rs. 22,000 for September expiry</strong></td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Options</strong></td>
+                                            <td class="py-2 px-4">Right (not obligation) to buy/sell at fixed price</td>
+                                            <td class="py-2 px-4"><strong>Reliance Call Option @ Rs. 2,800 strike</strong></td>
+                                        </tr>
+                                        <tr class="border-b border-[#F3EADE]">
+                                            <td class="py-2 px-4"><strong>Forward</strong></td>
+                                            <td class="py-2 px-4">Custom (OTC) contract, non-standard terms</td>
+                                            <td class="py-2 px-4">Private FX Forward at Rs. 84/USD</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-4"><strong>Swaps</strong></td>
+                                            <td class="py-2 px-4">Exchange cash flows based on predefined rules</td>
+                                            <td class="py-2 px-4">Fixed-to-Floating Interest Rate Swap</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="alternatives" class="tab-pane hidden">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ 4. Alternative Investments: Beyond Traditional Markets</h3>
+                            <p class="mb-4">Less traditional, often less liquid investments, which can offer diversification benefits and potentially higher returns but also come with higher risks. Data challenges can be significant here due to less standardization and transparency.</p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li><strong>Real Estate:</strong> Owning or renting property for income or capital appreciation. Includes direct ownership, real estate funds.</li>
+                                <li><strong>Commodities:</strong> Raw materials like <strong>Gold, Oil, Wheat</strong>. Prices are influenced by supply, demand, and geopolitical factors.</li>
+                                <li><strong>REITs (Real Estate Investment Trusts):</strong> Companies that own, operate, or finance income-producing real estate; traded on exchanges, offering liquidity not found in direct real estate.</li>
+                                <li><strong>Private Equity (PE):</strong> Investing in private companies or buying out public companies, often involving active management and long investment horizons.</li>
+                                <li><strong>Venture Capital (VC):</strong> Funding for startups and early-stage companies with high growth potential, characterized by high risk and high reward.</li>
+                            </ul>
+                        </div>
+
+                        <div id="cash" class="tab-pane hidden">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ 5. Cash & Equivalents: Liquidity and Stability</h3>
+                            <p class="mb-4">Highly liquid, short-term investments that are easily convertible to cash with minimal risk of value loss. Important for managing working capital, emergency funds, and as a safe haven during market volatility.</p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>Savings Account: Basic bank accounts offering low interest.</li>
+                                <li>Fixed Deposits (FDs): Term deposits offering fixed interest rates for a set period.</li>
+                                <li>Liquid Mutual Funds: Invest in short-term money market instruments, offering high liquidity.</li>
+                                <li>Treasury Bills (T-Bills): Short-term government debt securities, considered very low risk.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="markets" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ IV. Markets: The Trading Venues</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">Markets are the infrastructure where financial instruments are bought and sold. Software underpins almost all aspects of these markets, from order matching to data dissemination. Key participants include individual investors, institutional investors (like mutual funds, pension funds), and brokers. Trading mechanisms often involve electronic order books.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Primary Market</h3>
+                            <p>Where new securities are issued for the first time (e.g., Initial Public Offerings - IPOs, bond issuances). Developers might work on systems for book-building, allocation, and regulatory filings related to new issues.</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Secondary Market</h3>
+                            <p>Where existing securities trade between investors (e.g., National Stock Exchange - NSE, Bombay Stock Exchange - BSE). This is the realm of high-frequency trading systems, sophisticated order management systems (OMS), execution management systems (EMS), and real-time market data feeds.</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Derivatives Market</h3>
+                            <p>Specialized exchanges (e.g., NSE F&O segment) or OTC markets for trading futures, options, and swaps. These markets require complex real-time pricing models, risk engines, and robust back-office systems for collateral management and margining.</p>
+                        </div>
+                         <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">Forex (Foreign Exchange) Market</h3>
+                            <p>The largest and most liquid global decentralized market for trading currencies (e.g., <strong>USD-INR</strong> pair). It operates 24/5 and is crucial for global banks managing currency risk and facilitating international trade and investment. High-throughput, low-latency systems are paramount here.</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg col-span-full">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">OTC (Over-The-Counter) Market</h3>
+                            <p>Trades conducted directly between two parties without the supervision of a centralized exchange. This market is common for customized contracts like Forwards or complex Swaps. It requires strong internal systems for counterparty risk management, trade confirmation, and settlement processes, often relying on bilateral agreements.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="indexes" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ V. Indexes: Benchmarking Performance</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">An index is a statistical measure of the changes in a portfolio of stocks (or other securities) designed to represent a specific market or segment. Software developers often work on index calculation, tracking, and derivative products based on them, ensuring accurate reflection of market performance.</p>
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">🔹 Major Indexes</h3>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full bg-white rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-[#AF8F6F] text-white">
+                                    <th class="py-2 px-4 text-left rounded-tl-lg">Index Name</th>
+                                    <th class="py-2 px-4 text-left">Market</th>
+                                    <th class="py-2 px-4 text-left rounded-tr-lg">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>Nifty 50</strong></td>
+                                    <td class="py-2 px-4">India</td>
+                                    <td class="py-2 px-4">Top 50 large-cap stocks listed on the NSE</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>Sensex</strong></td>
+                                    <td class="py-2 px-4">India</td>
+                                    <td class="py-2 px-4">Top 30 large-cap stocks listed on the BSE</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>S&P 500</strong></td>
+                                    <td class="py-2 px-4">USA</td>
+                                    <td class="py-2 px-4">500 large-cap US companies (broad market indicator)</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4"><strong>Dow Jones Industrial Average (DJIA)</strong></td>
+                                    <td class="py-2 px-4">USA</td>
+                                    <td class="py-2 px-4">30 major industrial companies (price-weighted index)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">🔹 How Nifty 50 is Calculated (Illustrative for developers)</h3>
+                    <p class="mb-4">Nifty 50 uses a <strong>Free Float Market Capitalization Weighted</strong> methodology. This means larger, more freely available companies have a greater impact on the index value. Understanding this formula is key for developers working on index replication or derivatives. Other weighting methods include <strong>price-weighted</strong> (e.g., DJIA, where higher-priced stocks have more influence) and <strong>equal-weighted</strong> (each stock has the same influence).</p>
+                    <p class="mb-2"><strong>Formula:</strong></p>
+                    <div class="bg-[#FDF8F0] p-4 rounded-lg mb-4 overflow-x-auto">
+                        <code class="block whitespace-pre-wrap">Index = (Σ (Price × Free-Float Shares)) / Base Market Cap × Base Index Value</code>
+                    </div>
+                    <p class="mb-2"><strong>Example (Dummy Data for a simple calculation):</strong></p>
+                    <p class="mb-4">Imagine a simplified index with only two stocks:</p>
+                    <ul class="list-disc pl-5 space-y-1 mb-4">
+                        <li><strong>Infosys:</strong> Price: Rs. 1,500, Total Shares: 100 crore, Free-Float %: 50%</li>
+                        <li><strong>TCS:</strong> Price: Rs. 3,000, Total Shares: 80 crore, Free-Float %: 60%</li>
+                    </ul>
+                    <p class="mb-2">Calculations:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Free-Float Shares for Infosys = $100 \text{ crore} \times 0.50 = 50 \text{ crore}$</li>
+                        <li>Infosys Free-Float Market Cap = $1,500 \times 50 \text{ crore} = \text{Rs. } 75,000 \text{ crore}$</li>
+                        <li>Free-Float Shares for TCS = $80 \text{ crore} \times 0.60 = 48 \text{ crore}$</li>
+                        <li>TCS Free-Float Market Cap = $3,000 \times 48 \text{ crore} = \text{Rs. } 144,000 \text{ crore}$</li>
+                        <li>Total Sum of (Price × Free-Float Shares) = $\text{Rs. } 75,000 \text{ crore} + \text{Rs. } 144,000 \text{ crore} = \text{Rs. } 219,000 \text{ crore}$</li>
+                    </ul>
+                    <p class="mt-4 text-sm text-gray-600">*(To complete the calculation, you'd need a 'Base Market Cap' and 'Base Index Value' which are fixed values set at the index's inception, e.g., Base Index Value = 1000, Base Market Cap = the sum of free-float market caps at that base date).*</p>
+                </div>
+            </section>
+
+            <section id="portfolios" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ VI. Portfolios: Aggregating Investments</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">A portfolio is a collection of financial investments held by an individual or an institution. Software is critical for portfolio construction, optimization, risk analysis, and performance tracking. Concepts like <strong>Modern Portfolio Theory (MPT)</strong> aim to maximize expected return for a given level of risk, leading to the concept of an <strong>efficient frontier</strong>.</p>
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ Types of Portfolios</h3>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full bg-white rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-[#AF8F6F] text-white">
+                                    <th class="py-2 px-4 text-left rounded-tl-lg">Type</th>
+                                    <th class="py-2 px-4 text-left">Focus</th>
+                                    <th class="py-2 px-4 text-left rounded-tr-lg">Key Characteristics</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>Index Portfolio</strong></td>
+                                    <td class="py-2 px-4">Tracks a specific market index</td>
+                                    <td class="py-2 px-4">Low cost, passive, aims to match index performance (e.g., <strong>Nifty 50 ETF</strong>)</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>Growth Portfolio</strong></td>
+                                    <td class="py-2 px-4">Invests in companies with high growth potential</td>
+                                    <td class="py-2 px-4">Higher risk, higher potential return, focus on capital appreciation</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>Income Portfolio</strong></td>
+                                    <td class="py-2 px-4">Focuses on generating regular income</td>
+                                    <td class="py-2 px-4">Lower risk, invests in dividends stocks, bonds, REITs</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4"><strong>Thematic Portfolio</strong></td>
+                                    <td class="py-2 px-4">Invests based on specific trends or themes</td>
+                                    <td class="py-2 px-4">ESG (Environmental, Social, Governance), Tech, Green Energy, AI</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">➤ Tools for Portfolio Management (Often Software-Driven)</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Mutual Funds:</strong> Professionally managed pools of money from multiple investors. Offer diversification and professional management.</li>
+                        <li><strong>ETFs (Exchange Traded Funds):</strong> Similar to mutual funds but trade like stocks on exchanges throughout the day, offering greater liquidity.</li>
+                        <li><strong>PMS (Portfolio Management Services):</strong> Customized investment portfolios managed by professionals for high net-worth individuals, offering personalized strategies and direct interaction.</li>
+                        <li><strong>Robo-Advisors:</strong> Automated, algorithm-driven financial planning services with minimal human intervention. They typically build diversified portfolios based on risk tolerance and financial goals, a key area for developer contribution in FinTech.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="vehicles" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ VII. Investment Vehicles: Pathways to Investing</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">Investment vehicles are specific products or structures used to facilitate investments. Understanding these helps in building systems that support various client needs and investment strategies, considering aspects like liquidity, tax implications, and risk profiles.</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Mutual Funds: Diversified, professionally managed, suitable for long-term goals.</li>
+                        <li>ETFs: Traded on exchanges, offer diversification, and are generally more liquid than traditional mutual funds.</li>
+                        <li>Index Funds: A type of mutual fund or ETF designed to track a market index, offering passive investment with low expense ratios.</li>
+                        <li>ULIPs (Unit-Linked Insurance Plans): A hybrid product combining life insurance with investment, where premiums are invested in market-linked funds.</li>
+                        <li>Fixed Deposits (FDs), PPF (Public Provident Fund), EPF (Employees' Provident Fund): Traditional, low-risk savings instruments, often with tax benefits and fixed returns, but lower liquidity.</li>
+                        <li>Sovereign Gold Bonds (SGB): Government securities denominated in grams of gold, offering an alternative to physical gold with added interest and tax benefits.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="esg-funds" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ VIII. ESG Funds: Sustainable Investing</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">ESG (Environmental, Social, Governance) funds invest in companies that demonstrate strong performance in these non-financial areas. For developers, understanding ESG data, its collection, analysis, and integration into investment strategies is becoming increasingly important for building responsible and impactful financial systems. Challenges include data standardization and greenwashing.</p>
+                    
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">✅ I. Sample ESG Fund Portfolio (Illustrative)</h3>
+                    <p class="mb-4">Here’s a simplified example of a sample ESG mutual fund portfolio in India, demonstrating how allocations are made based on ESG focus and sector diversification.</p>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full bg-white rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-[#AF8F6F] text-white">
+                                    <th class="py-2 px-4 text-left rounded-tl-lg">Company</th>
+                                    <th class="py-2 px-4 text-left">Sector</th>
+                                    <th class="py-2 px-4 text-left">ESG Focus</th>
+                                    <th class="py-2 px-4 text-left rounded-tr-lg">Allocation (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Infosys</td>
+                                    <td class="py-2 px-4">IT</td>
+                                    <td class="py-2 px-4">Clean energy use, good governance</td>
+                                    <td class="py-2 px-4">15%</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">HDFC Bank</td>
+                                    <td class="py-2 px-4">Banking</td>
+                                    <td class="py-2 px-4">Financial inclusion, transparency</td>
+                                    <td class="py-2 px-4">13%</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Tata Consultancy</td>
+                                    <td class="py-2 px-4">IT</td>
+                                    <td class="py-2 px-4">Strong labor practices, carbon offset</td>
+                                    <td class="py-2 px-4">12%</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Hindustan Unilever</td>
+                                    <td class="py-2 px-4">FMCG</td>
+                                    <td class="py-2 px-4">Water conservation, community work</td>
+                                    <td class="py-2 px-4">10%</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Mahindra & Mahindra</td>
+                                    <td class="py-2 px-4">Auto</td>
+                                    <td class="py-2 px-4">EV transition, ethical sourcing</td>
+                                    <td class="py-2 px-4">8%</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Tata Power</td>
+                                    <td class="py-2 px-4">Energy (Renewable)</td>
+                                    <td class="py-2 px-4">Green power production</td>
+                                    <td class="py-2 px-4">6%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4">Others</td>
+                                    <td class="py-2 px-4">-</td>
+                                    <td class="py-2 px-4">Diversified</td>
+                                    <td class="py-2 px-4">36%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">💡 This portfolio includes companies with high ESG ratings as per Indian ESG indexes like Nifty 100 ESG or MSCI India ESG Leaders Index. Building systems to track and report on these allocations is a key developer task.</p>
+
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4 mt-8">🧮 II. ESG Rating Example (Dummy)</h3>
+                    <p class="mb-4">ESG ratings assess a company's performance across environmental (E), social (S), and governance (G) criteria. These scores are often provided by third-party agencies and are crucial for fund managers to screen investments. Higher scores indicate stronger ESG practices, which are often a key filter for ESG funds.</p>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full bg-white rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-[#AF8F6F] text-white">
+                                    <th class="py-2 px-4 text-left rounded-tl-lg">Company</th>
+                                    <th class="py-2 px-4 text-left">E Score (100)</th>
+                                    <th class="py-2 px-4 text-left">S Score (100)</th>
+                                    <th class="py-2 px-4 text-left">G Score (100)</th>
+                                    <th class="py-2 px-4 text-left rounded-tr-lg">Overall ESG Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Infosys</td>
+                                    <td class="py-2 px-4">78</td>
+                                    <td class="py-2 px-4">85</td>
+                                    <td class="py-2 px-4">90</td>
+                                    <td class="py-2 px-4">84</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Tata Steel</td>
+                                    <td class="py-2 px-4">60</td>
+                                    <td class="py-2 px-4">70</td>
+                                    <td class="py-2 px-4">75</td>
+                                    <td class="py-2 px-4">68</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">ITC</td>
+                                    <td class="py-2 px-4">55</td>
+                                    <td class="py-2 px-4">80</td>
+                                    <td class="py-2 px-4">65</td>
+                                    <td class="py-2 px-4">67</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4">Adani Ports</td>
+                                    <td class="py-2 px-4">30</td>
+                                    <td class="py-2 px-4">40</td>
+                                    <td class="py-2 px-4">45</td>
+                                    <td class="py-2 px-4">38</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">Higher scores indicate stronger ESG practices. ESG funds typically avoid companies scoring below a threshold (e.g., &lt; 60). Developers often work with APIs to ingest, store, and process these complex ESG datasets.</p>
+
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4 mt-8">📊 III. ESG Fund vs Regular Fund Performance (Example)</h3>
+                    <p class="mb-4">Comparing ESG fund performance against traditional funds helps investors understand potential trade-offs and benefits. This data is illustrative and highlights that ESG alignment does not always guarantee outperformance in all market conditions.</p>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="min-w-full bg-white rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-[#AF8F6F] text-white">
+                                    <th class="py-2 px-4 text-left rounded-tl-lg">Fund Type</th>
+                                    <th class="py-2 px-4 text-left">3Y CAGR Return</th>
+                                    <th class="py-2 px-4 text-left">Risk Level</th>
+                                    <th class="py-2 px-4 text-left rounded-tr-lg">ESG Alignment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">SBI Magnum ESG</td>
+                                    <td class="py-2 px-4">14.2%</td>
+                                    <td class="py-2 px-4">Moderate</td>
+                                    <td class="py-2 px-4">High</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4">Axis Bluechip Fund</td>
+                                    <td class="py-2 px-4">13.6%</td>
+                                    <td class="py-2 px-4">Moderate</td>
+                                    <td class="py-2 px-4">Medium</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4">ICICI Value Fund</td>
+                                    <td class="py-2 px-4">12.1%</td>
+                                    <td class="py-2 px-4">High</td>
+                                    <td class="py-2 px-4">Low</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">Note: Past performance is not a guarantee. ESG funds may outperform during stable periods and underperform in high-risk cycles (e.g., energy crisis). Performance analysis and reporting tools are key software deliverables.</p>
+
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4 mt-8">🧰 IV. Tools to Explore ESG Funds</h3>
+                    <p class="mb-4">Various platforms and tools can assist in researching and analyzing ESG funds, providing data on ratings, performance, and fund details. Developers might integrate with or build similar tools.</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Morningstar:</strong> A global investment research firm providing ESG ratings and fund screening tools.</li>
+                        <li><strong>Sustainalytics:</strong> A leading provider of ESG research, ratings, and data to institutional investors.</li>
+                        <li><strong>NSE India / AMFI:</strong> Official sources for searching and understanding ESG mutual funds available in India, providing regulatory data and fund details.</li>
+                        <li><strong>Moneycontrol / Groww / Zerodha:</strong> Popular investment platforms that allow users to track ESG fund NAVs (Net Asset Values) and performance, often providing user-friendly interfaces built by developers.</li>
+                    </ul>
+
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4 mt-8">✅ V. How to Invest in ESG Funds</h3>
+                    <p class="mb-4">A step-by-step guide to investing in ESG funds, relevant for understanding the user journey in investment platforms and the underlying processes that software systems support.</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li><strong>Choose a fund house offering ESG:</strong> Major players like SBI, Kotak, ICICI, and Mirae offer dedicated ESG funds.</li>
+                        <li><strong>Pick Direct Plan (lower fees) or Regular Plan:</strong> Direct plans are purchased directly from the AMC (Asset Management Company) and have lower expense ratios, while regular plans involve a distributor and higher fees.</li>
+                        <li><strong>Choose SIP (Systematic Investment Plan) or Lumpsum:</strong> SIP involves regular, fixed investments, promoting disciplined investing and rupee-cost averaging. Lumpsum is a one-time, larger investment.</li>
+                        <li><strong>Monitor ESG scores annually:</strong> Regularly check the ESG ratings of the underlying companies in the fund to ensure they continue to meet sustainability criteria.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="concepts" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ IX. Key Financial Concepts: The Core Logic</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">These are the fundamental principles underlying all financial analysis and decision-making. Essential for building robust financial models and algorithms, as they define the objectives and constraints of financial systems.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">🔹 Risk</h3>
+                            <p>The uncertainty of an outcome, or the possibility of suffering a financial loss. Beyond general volatility, key risks include: <strong>Liquidity Risk</strong> (difficulty selling an asset quickly), <strong>Operational Risk</strong> (losses from failed internal processes or systems), <strong>Systematic Risk</strong> (market-wide, non-diversifiable), and <strong>Unsystematic Risk</strong> (company-specific, diversifiable).</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">🔹 Return</h3>
+                            <p>The gain or loss on an investment over a period. Measures include: <strong>CAGR (Compound Annual Growth Rate)</strong>, which represents the smoothed annualized gain over multiple years; <strong>XIRR (Extended Internal Rate of Return)</strong>, which calculates the true annualized return for a series of cash flows occurring at irregular intervals; and <strong>Yield</strong>, the income return on an investment (e.g., dividend yield for stocks, yield to maturity for bonds).</p>
+                        </div>
+                        <div class="p-4 bg-[#FDF8F0] rounded-lg col-span-full">
+                            <h3 class="font-bold text-xl text-[#74512D] mb-2">🔹 Diversification</h3>
+                            <p>Spreading investments across different asset classes, industries, or geographies to reduce overall risk. A core principle in portfolio optimization algorithms, diversification aims to achieve a better risk-adjusted return by combining assets whose returns are not perfectly correlated.</p>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">🔹 Ratios (Quantitative Measures for Performance/Risk)</h3>
+                    <p class="mb-4">Financial ratios provide quantitative insights into performance, risk, and valuation. Visualizing these ratios helps in quick comparative analysis and are critical inputs for financial models.</p>
+                    <div class="chart-container">
+                        <canvas id="ratiosChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="data" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ X. Dummy Real-Time Security Data Visualized</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">Software developers will typically consume and process data like this from market data providers or internal systems. This visualization helps in comparing the annual return/yield of various dummy securities, with risk levels noted for context, simulating a real-time dashboard component.</p>
+                    <div class="chart-container">
+                        <canvas id="securityDataChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">Hover over the bars to see detailed information about each security, including its type, price, return/yield, and risk level.</p>
+                </div>
+            </section>
+
+            <section id="regulatory" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ XI. Regulatory Bodies: The Guardians of the System</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">Understanding the regulatory landscape is crucial for compliance and building legally sound financial applications. These bodies set the rules that govern financial markets and institutions, impacting how systems are designed, data is handled, and transactions are reported.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white rounded-lg shadow-sm">
+                            <thead>
+                                <tr class="bg-[#AF8F6F] text-white">
+                                    <th class="py-2 px-4 text-left rounded-tl-lg">Body</th>
+                                    <th class="py-2 px-4 text-left">Region</th>
+                                    <th class="py-2 px-4 text-left">Role</th>
+                                    <th class="py-2 px-4 text-left rounded-tr-lg">Developer Relevance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>SEBI</strong></td>
+                                    <td class="py-2 px-4">India</td>
+                                    <td class="py-2 px-4">Securities & Exchange Board of India; Regulates securities markets.</td>
+                                    <td class="py-2 px-4">Ensuring compliance in trading systems, reporting, data storage, and market data integrity.</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>RBI</strong></td>
+                                    <td class="py-2 px-4">India</td>
+                                    <td class="py-2 px-4">Reserve Bank of India; Central bank, monetary policy, banking regulation.</td>
+                                    <td class="py-2 px-4">Compliance for banking products, payment systems, foreign exchange transactions, and financial stability models.</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>FEMA</strong></td>
+                                    <td class="py-2 px-4">India</td>
+                                    <td class="py-2 px-4">Foreign Exchange Management Act; governs foreign exchange transactions.</td>
+                                    <td class="py-2 px-4">Critical for systems handling cross-border transactions, currency conversions, and related data.</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>FED</strong></td>
+                                    <td class="py-2 px-4">USA</td>
+                                    <td class="py-2 px-4">Federal Reserve System; US central bank.</td>
+                                    <td class="py-2 px-4">Understanding global monetary policy impact on financial markets and compliance with US banking regulations (e.g., Dodd-Frank).</td>
+                                </tr>
+                                <tr class="border-b border-[#F3EADE]">
+                                    <td class="py-2 px-4"><strong>FCA</strong></td>
+                                    <td class="py-2 px-4">UK</td>
+                                    <td class="py-2 px-4">Financial Conduct Authority; regulates financial services in the UK.</td>
+                                    <td class="py-2 px-4">Relevant for systems operating or interacting with UK markets, ensuring consumer protection and market integrity.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-4"><strong>MiFID II</strong></td>
+                                    <td class="py-2 px-4">EU</td>
+                                    <td class="py-2 px-4">Markets in Financial Instruments Directive; comprehensive regulation.</td>
+                                    <td class="py-2 px-4">Impacts trading venue choice, data reporting (e.g., transaction reporting), best execution requirements, and algorithmic trading rules for EU operations.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quant" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ XII. Quantitative Finance & Algorithmic Trading: Your Playground</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">This section highlights where a software developer's skills directly intersect with finance, moving from foundational knowledge to expert application. Explore the accordion below to delve into key areas of quantitative finance and algorithmic trading.</p>
+                    
+                    <div class="accordion-item mb-4 rounded-lg border border-[#F3EADE]">
+                        <div class="accordion-header p-4 bg-[#FDF8F0] font-semibold text-[#74512D] flex justify-between items-center rounded-t-lg">
+                            <span>🔹 1. Financial Modeling</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div class="accordion-content p-4 bg-white rounded-b-lg">
+                            <p class="mb-2"><strong>Concept:</strong> Translating financial scenarios into mathematical representations (e.g., discounted cash flow models for company valuation, options pricing models like Black-Scholes). These models form the backbone of valuation, risk assessment, and strategic decision-making.</p>
+                            <p><strong>Developer Role:</strong> Implementing these models efficiently and accurately, often using high-performance computing languages like C++ or numerical libraries in Python (NumPy, Pandas, SciPy). This also involves building robust data pipelines to feed models and ensure their real-time accuracy and performance.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item mb-4 rounded-lg border border-[#F3EADE]">
+                        <div class="accordion-header p-4 bg-[#FDF8F0] font-semibold text-[#74512D] flex justify-between items-center">
+                            <span>🔹 2. Algorithmic Trading (Algos)</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div class="accordion-content p-4 bg-white">
+                            <p class="mb-2"><strong>Concept:</strong> Using computer programs to execute trades based on predefined rules. This constitutes a significant portion of modern trading volume and requires highly optimized, low-latency systems capable of processing vast amounts of market data in milliseconds.</p>
+                            <p class="mb-2"><strong>Types:</strong></p>
+                            <ul class="list-disc pl-5 space-y-1 mb-2">
+                                <li><strong>High-Frequency Trading (HFT):</strong> Executing a large number of orders at extremely high speeds (microseconds). Requires ultra-low latency systems, direct market access, and highly optimized network infrastructure.</li>
+                                <li><strong>Market Making:</strong> Providing liquidity by simultaneously offering to buy and sell securities, profiting from the bid-ask spread.</li>
+                                <li><strong>Arbitrage:</strong> Exploiting small, temporary price differences between identical assets in different markets.</li>
+                                <li><strong>Statistical Arbitrage:</strong> Using statistical methods to identify temporary mispricings between correlated assets.</li>
+                                <li><strong>Order Routing Systems:</strong> Efficiently sending orders to various exchanges and dark pools to achieve best execution.</li>
+                            </ul>
+                            <p><strong>Developer Role:</strong> Designing, implementing, and optimizing trading algorithms; building low-latency systems, integrating with exchange APIs (FIX protocol is common), ensuring fault tolerance, security, and real-time performance monitoring. Expertise in concurrent programming and network programming is vital.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item mb-4 rounded-lg border border-[#F3EADE]">
+                        <div class="accordion-header p-4 bg-[#FDF8F0] font-semibold text-[#74512D] flex justify-between items-center">
+                            <span>🔹 3. Risk Management Systems</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div class="accordion-content p-4 bg-white">
+                            <p class="mb-2"><strong>Concept:</strong> Identifying, assessing, and mitigating financial risks across portfolios, trading desks, and the entire institution. These systems are critical for financial stability and regulatory compliance, ensuring that potential losses are understood and managed.</p>
+                            <p><strong>Developer Role:</strong> Building real-time risk engines (e.g., calculating VaR - Value at Risk, Expected Shortfall), stress testing frameworks to simulate extreme market conditions, position keeping systems, and robust regulatory reporting tools. This involves complex data aggregation, parallel processing, and sophisticated numerical methods.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item mb-4 rounded-lg border border-[#F3EADE]">
+                        <div class="accordion-header p-4 bg-[#FDF8F0] font-semibold text-[#74512D] flex justify-between items-center">
+                            <span>🔹 4. Data Science & Machine Learning in Finance (Quant)</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div class="accordion-content p-4 bg-white">
+                            <p class="mb-2"><strong>Concept:</strong> Applying statistical and machine learning techniques to vast amounts of financial data for prediction, anomaly detection, and strategy development. This field is rapidly growing in finance, driving innovation in areas like fraud detection and personalized financial advice.</p>
+                            <p class="mb-2"><strong>Applications:</strong></p>
+                            <ul class="list-disc pl-5 space-y-1 mb-2">
+                                <li><strong>Predictive Analytics:</strong> Forecasting asset prices, market trends, and economic indicators using time-series models (e.g., ARIMA, LSTMs).</li>
+                                <li><strong>Sentiment Analysis:</strong> Extracting market sentiment from news articles, social media, and analyst reports to inform trading decisions.</li>
+                                <li><strong>Fraud Detection:</strong> Identifying suspicious transactions and patterns indicative of financial crime using anomaly detection algorithms.</li>
+                                <li><strong>Portfolio Optimization:</strong> Using ML models to find optimal asset allocations that maximize returns for a given risk level or minimize risk for a target return.</li>
+                                <li><strong>Algorithmic Strategy Generation:</strong> Developing and backtesting new trading signals and strategies based on complex data patterns.</li>
+                            </ul>
+                            <p><strong>Developer Role:</strong> Data engineering (building robust ETL pipelines for financial data), developing and deploying ML models (using frameworks like TensorFlow, PyTorch, Scikit-learn), implementing MLOps for model lifecycle management, and working with big data processing frameworks (Spark, Hadoop) for large-scale data analysis.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item mb-4 rounded-lg border border-[#F3EADE]">
+                        <div class="accordion-header p-4 bg-[#FDF8F0] font-semibold text-[#74512D] flex justify-between items-center rounded-b-lg">
+                            <span>🔹 5. Blockchain & Distributed Ledger Technology (DLT)</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div class="accordion-content p-4 bg-white rounded-b-lg">
+                            <p class="mb-2"><strong>Concept:</strong> Decentralized, immutable ledgers that offer new paradigms for trust, transparency, and efficiency in financial transactions by removing intermediaries. This technology underpins cryptocurrencies but has broader applications in traditional finance.</p>
+                            <p class="mb-2"><strong>Applications:</strong></p>
+                            <ul class="list-disc pl-5 space-y-1 mb-2">
+                                <li><strong>Post-trade Settlement:</strong> Streamlining and accelerating the settlement of financial transactions.</li>
+                                <li><strong>Digital Assets (Tokenization):</strong> Representing real-world assets (e.g., real estate, art, company shares) as digital tokens on a blockchain, enabling fractional ownership and easier transfer.</li>
+                                <li><strong>Smart Contracts:</strong> Self-executing contracts with the terms of the agreement directly written into code, useful for automating derivatives or insurance claims.</li>
+                                <li><strong>Supply Chain Finance:</strong> Enhancing transparency and efficiency in financing global supply chains.</li>
+                            </ul>
+                            <p><strong>Developer Role:</strong> Exploring and implementing DLT solutions for financial infrastructure, building smart contracts (e.g., Solidity for Ethereum), integrating with various blockchain networks, and understanding the security, scalability, and regulatory implications of these emerging technologies.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="career" class="mb-12 pt-16 -mt-16">
+                <h2 class="text-3xl font-bold text-[#74512D] mb-4">☑️ XIII. Career Path & Skills for a Finance Software Developer</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <p class="mb-6 text-lg">Excelling as a software developer in an investment bank requires a blend of technical prowess and financial acumen. Continuous learning in these areas is paramount for career growth and impact, as the financial industry rapidly evolves with technology.</p>
+                    <h3 class="font-bold text-xl text-[#74512D] mb-4">Key Areas for Growth:</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Deepen Financial Domain Knowledge:</strong> Continually learn about new instruments, market structures, regulations, and financial products. This contextual understanding is crucial for building relevant and effective solutions.</li>
+                        <li><strong>Programming Expertise:</strong> Master languages like Python (dominant for quant, data science, scripting, and rapid prototyping), C++ (for high-performance, low-latency systems like trading engines and market data feeds), and Java (for large enterprise applications, back-office systems, and complex business logic).</li>
+                        <li><strong>Data Structures & Algorithms:</strong> Essential for optimizing performance-critical financial applications, especially in areas like algorithmic trading, market data processing, and complex calculations where efficiency is paramount.</li>
+                        <li><strong>Database Skills:</strong> Proficiency in SQL (for relational databases managing structured financial data) and NoSQL databases (e.g., time-series databases for market data, document databases for flexible data models, graph databases for relationship analysis).</li>
+                        <li><strong>Cloud Computing:</strong> Experience with major cloud platforms (AWS, Azure, GCP) for building scalable, resilient financial infrastructure, deploying machine learning models, and leveraging managed services for data processing and analytics.</li>
+                        <li><strong>DevOps & SRE:</strong> Understanding practices for building robust, reliable, and continuously deployed financial systems. This includes automation, monitoring, incident response, and ensuring high availability and minimal downtime for critical financial services.</li>
+                        <li><strong>Quantitative Skills:</strong> A solid grasp of probability, statistics, calculus, and linear algebra – the mathematical foundations of financial models, risk management, and quantitative analysis. This enables collaboration with quants and direct contribution to model implementation.</li>
+                        <li><strong>Communication:</strong> The ability to effectively bridge the gap between financial users/quants and technical implementation teams. This involves translating complex financial requirements into clear technical specifications and explaining technical limitations or solutions in business terms.</li>
+                        <li><strong>Security & Compliance:</strong> A strong understanding of cybersecurity principles and regulatory compliance requirements (e.g., GDPR, CCPA, SOX, MiFID II) is non-negotiable in the highly regulated financial industry.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const securityData = [
+            {
+                "security_id": "INFY",
+                "type": "Stock",
+                "current_price_INR": 1520.00,
+                "annual_return_percent": 8.0,
+                "risk_level": "Medium",
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "SBI_5Y_BOND",
+                "type": "Bond",
+                "current_price_INR": 980.00,
+                "yield_to_maturity_percent": 7.5,
+                "risk_level": "Low",
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "NIFTY_SEPT_FUTURE",
+                "type": "Future",
+                "current_price_INR": 22150.00,
+                "implied_volatility_percent": 15.2,
+                "risk_level": "High",
+                "expiry_date": "2025-09-25",
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "USD_INR_SWAP",
+                "type": "Swap",
+                "current_rate_INR_per_USD": 83.90,
+                "swap_type": "FX Risk Hedge",
+                "risk_level": "FX Risk",
+                "notional_amount_USD": 1000000,
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "ESG_INDEX_ETF",
+                "type": "ETF",
+                "current_price_INR": 124.00,
+                "annual_return_percent": 6.0,
+                "risk_level": "Low-Medium",
+                "tracked_index": "Nifty ESG Index",
+                "last_updated": "2025-07-19T22:45:00Z"
+            }
+        ];
+
+        const ratiosData = [
+            { name: "Sharpe Ratio", value: 1.2, description: "Return per unit of risk (higher is better)." },
+            { name: "Alpha", value: 0.05, description: "Excess return above the benchmark (skill-based return)." },
+            { name: "Beta", value: 0.8, description: "Volatility of a security/portfolio relative to the market." },
+            { name: "P/E Ratio", value: 25, description: "Price-to-Earnings Ratio (valuation metric)." },
+            { name: "Debt-to-Equity", value: 0.7, description: "Measures leverage; financial health of a company." },
+            { name: "Current Ratio", value: 1.5, description: "Measures short-term liquidity (current assets / current liabilities)." }
+        ];
+
+        function wrapLabel(label, maxCharsPerLine) {
+            if (label.length <= maxCharsPerLine) {
+                return label;
+            }
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length <= maxCharsPerLine) {
+                    currentLine += (currentLine === '' ? '' : ' ') + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            });
+            if (currentLine !== '') {
+                lines.push(currentLine);
+            }
+            return lines;
+        }
+
+        function initSecurityChart() {
+            const ctx = document.getElementById('securityDataChart').getContext('2d');
+            const labels = securityData.map(s => wrapLabel(s.security_id, 16));
+            const returns = securityData.map(s => s.annual_return_percent || s.yield_to_maturity_percent || 0);
+            const riskColors = {
+                "Low": '#82b74b',
+                "Low-Medium": '#a2c47d',
+                "Medium": '#f7b731',
+                "High": '#e74c3c',
+                "FX Risk": '#3498db'
+            };
+            const backgroundColors = securityData.map(s => riskColors[s.risk_level] || '#95a5a6');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Annual Return/Yield (%)',
+                        data: returns,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace('0.8)', '1)')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label.replace(/,/g, ' ');
+                                },
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const data = securityData[index];
+                                    let label = `Type: ${data.type}`;
+                                    if (data.current_price_INR) label += `, Price: Rs. ${data.current_price_INR.toFixed(2)}`;
+                                    if (data.annual_return_percent) label += `, Return: ${data.annual_return_percent}% p.a.`;
+                                    if (data.yield_to_maturity_percent) label += `, Yield: ${data.yield_to_maturity_percent}% p.a.`;
+                                    if (data.risk_level) label += `, Risk: ${data.risk_level}`;
+                                    if (data.implied_volatility_percent) label += `, Implied Vol: ${data.implied_volatility_percent}%`;
+                                    if (data.expiry_date) label += `, Expiry: ${data.expiry_date}`;
+                                    if (data.swap_type) label += `, Swap Type: ${data.swap_type}`;
+                                    if (data.notional_amount_USD) label += `, Notional: $${data.notional_amount_USD.toLocaleString()}`;
+                                    if (data.tracked_index) label += `, Tracks: ${data.tracked_index}`;
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Return/Yield (%)',
+                                color: '#74512D'
+                            },
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initRatiosChart() {
+            const ctx = document.getElementById('ratiosChart').getContext('2d');
+            const labels = ratiosData.map(r => wrapLabel(r.name, 16));
+            const values = ratiosData.map(r => r.value);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ratio Value',
+                        data: values,
+                        backgroundColor: '#AF8F6F',
+                        borderColor: '#74512D',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label.replace(/,/g, ' ');
+                                },
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const data = ratiosData[index];
+                                    return `${data.name}: ${data.value} - ${data.description}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Value',
+                                color: '#74512D'
+                            },
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSecurityChart();
+            initRatiosChart();
+
+            const sidebarLinks = document.querySelectorAll('#sidebar-nav .sidebar-link');
+            const mobileNavSelect = document.getElementById('mobile-nav');
+
+            const sections = document.querySelectorAll('section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentSectionId = entry.target.id;
+                        sidebarLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${currentSectionId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                        if (mobileNavSelect) {
+                            mobileNavSelect.value = currentSectionId;
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 64,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            if (mobileNavSelect) {
+                mobileNavSelect.addEventListener('change', (e) => {
+                    const targetId = e.target.value;
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 64,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabPanes.forEach(pane => pane.classList.add('hidden'));
+                    document.getElementById(button.dataset.tab).classList.remove('hidden');
+                });
+            });
+
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.accordion-icon');
+                    content.classList.toggle('active');
+                    if (content.classList.contains('active')) {
+                        icon.textContent = '▲';
+                    } else {
+                        icon.textContent = '▼';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

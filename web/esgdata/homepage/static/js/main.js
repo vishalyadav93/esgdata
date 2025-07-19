@@ -485,3 +485,324 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Error adding custom material:", error));
     });
 });
+
+
+/*
+ESG FUND
+*/
+
+        const securityData = [
+            {
+                "security_id": "INFY",
+                "type": "Stock",
+                "current_price_INR": 1520.00,
+                "annual_return_percent": 8.0,
+                "risk_level": "Medium",
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "SBI_5Y_BOND",
+                "type": "Bond",
+                "current_price_INR": 980.00,
+                "yield_to_maturity_percent": 7.5,
+                "risk_level": "Low",
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "NIFTY_SEPT_FUTURE",
+                "type": "Future",
+                "current_price_INR": 22150.00,
+                "implied_volatility_percent": 15.2,
+                "risk_level": "High",
+                "expiry_date": "2025-09-25",
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "USD_INR_SWAP",
+                "type": "Swap",
+                "current_rate_INR_per_USD": 83.90,
+                "swap_type": "FX Risk Hedge",
+                "risk_level": "FX Risk",
+                "notional_amount_USD": 1000000,
+                "last_updated": "2025-07-19T22:45:00Z"
+            },
+            {
+                "security_id": "ESG_INDEX_ETF",
+                "type": "ETF",
+                "current_price_INR": 124.00,
+                "annual_return_percent": 6.0,
+                "risk_level": "Low-Medium",
+                "tracked_index": "Nifty ESG Index",
+                "last_updated": "2025-07-19T22:45:00Z"
+            }
+        ];
+
+        const ratiosData = [
+            { name: "Sharpe Ratio", value: 1.2, description: "Return per unit of risk (higher is better)." },
+            { name: "Alpha", value: 0.05, description: "Excess return above the benchmark (skill-based return)." },
+            { name: "Beta", value: 0.8, description: "Volatility of a security/portfolio relative to the market." },
+            { name: "P/E Ratio", value: 25, description: "Price-to-Earnings Ratio (valuation metric)." },
+            { name: "Debt-to-Equity", value: 0.7, description: "Measures leverage; financial health of a company." },
+            { name: "Current Ratio", value: 1.5, description: "Measures short-term liquidity (current assets / current liabilities)." }
+        ];
+
+        function wrapLabel(label, maxCharsPerLine) {
+            if (label.length <= maxCharsPerLine) {
+                return label;
+            }
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length <= maxCharsPerLine) {
+                    currentLine += (currentLine === '' ? '' : ' ') + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            });
+            if (currentLine !== '') {
+                lines.push(currentLine);
+            }
+            return lines;
+        }
+
+        function initSecurityChart() {
+            const ctx = document.getElementById('securityDataChart').getContext('2d');
+            const labels = securityData.map(s => wrapLabel(s.security_id, 16));
+            const returns = securityData.map(s => s.annual_return_percent || s.yield_to_maturity_percent || 0);
+            const riskColors = {
+                "Low": '#82b74b',
+                "Low-Medium": '#a2c47d',
+                "Medium": '#f7b731',
+                "High": '#e74c3c',
+                "FX Risk": '#3498db'
+            };
+            const backgroundColors = securityData.map(s => riskColors[s.risk_level] || '#95a5a6');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Annual Return/Yield (%)',
+                        data: returns,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace('0.8)', '1)')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label.replace(/,/g, ' ');
+                                },
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const data = securityData[index];
+                                    let label = `Type: ${data.type}`;
+                                    if (data.current_price_INR) label += `, Price: Rs. ${data.current_price_INR.toFixed(2)}`;
+                                    if (data.annual_return_percent) label += `, Return: ${data.annual_return_percent}% p.a.`;
+                                    if (data.yield_to_maturity_percent) label += `, Yield: ${data.yield_to_maturity_percent}% p.a.`;
+                                    if (data.risk_level) label += `, Risk: ${data.risk_level}`;
+                                    if (data.implied_volatility_percent) label += `, Implied Vol: ${data.implied_volatility_percent}%`;
+                                    if (data.expiry_date) label += `, Expiry: ${data.expiry_date}`;
+                                    if (data.swap_type) label += `, Swap Type: ${data.swap_type}`;
+                                    if (data.notional_amount_USD) label += `, Notional: $${data.notional_amount_USD.toLocaleString()}`;
+                                    if (data.tracked_index) label += `, Tracks: ${data.tracked_index}`;
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Return/Yield (%)',
+                                color: '#74512D'
+                            },
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initRatiosChart() {
+            const ctx = document.getElementById('ratiosChart').getContext('2d');
+            const labels = ratiosData.map(r => wrapLabel(r.name, 16));
+            const values = ratiosData.map(r => r.value);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ratio Value',
+                        data: values,
+                        backgroundColor: '#AF8F6F',
+                        borderColor: '#74512D',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label.replace(/,/g, ' ');
+                                },
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const data = ratiosData[index];
+                                    return `${data.name}: ${data.value} - ${data.description}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Value',
+                                color: '#74512D'
+                            },
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#34495E'
+                            },
+                            grid: {
+                                color: '#F3EADE'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSecurityChart();
+            initRatiosChart();
+
+            const sidebarLinks = document.querySelectorAll('#sidebar-nav .sidebar-link');
+            const mobileNavSelect = document.getElementById('mobile-nav');
+
+            const sections = document.querySelectorAll('section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentSectionId = entry.target.id;
+                        sidebarLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${currentSectionId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                        if (mobileNavSelect) {
+                            mobileNavSelect.value = currentSectionId;
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 64,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            if (mobileNavSelect) {
+                mobileNavSelect.addEventListener('change', (e) => {
+                    const targetId = e.target.value;
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 64,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabPanes.forEach(pane => pane.classList.add('hidden'));
+                    document.getElementById(button.dataset.tab).classList.remove('hidden');
+                });
+            });
+
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.accordion-icon');
+                    content.classList.toggle('active');
+                    if (content.classList.contains('active')) {
+                        icon.textContent = '▲';
+                    } else {
+                        icon.textContent = '▼';
+                    }
+                });
+            });
+        });

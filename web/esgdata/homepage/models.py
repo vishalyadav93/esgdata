@@ -7,7 +7,7 @@ class Entity(models.Model):
     name = models.CharField(max_length=100)
     descr = models.TextField()
     class Meta:
-        db_table = 'entity' 
+        db_table = '[esg].[entity]' 
 
 class ESGStandard(models.Model):
     iso_standard = models.CharField(max_length=100)

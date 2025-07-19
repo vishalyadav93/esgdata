@@ -4,6 +4,8 @@ import os
 files=['Waste_generation_tracking',
        'Waste_disposal_Tracking',
        'Waste_recycle_tracking',
+       'ESG Metric tracker',
+       'Risk_template'
 ]
 
 
